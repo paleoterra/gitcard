@@ -1,0 +1,83 @@
+#!/bin/sh
+
+## git card is a small cli command to store your current kanban card number 
+## other tools are required to incorporate it into you git system
+## including: pre-commit hooks
+##            tools to display the current card number
+
+## Error red color
+RED='\033[0;31m'
+
+## Store the card number in the user's home directory
+filepath="$HOME/.CARD_NUMBER"
+NEWCARD=""
+while (( "$#" )); do
+  case "$1" in
+    -h|--help)
+      echo 'git card { card number | -h | --clear | -c | --branch | --story | --spike }'
+        echo '     card number : text number of card (may include letters'
+        echo '     -h          : this help message'
+        echo '     --clear     : clears the current card number'
+        echo '     -c          : captures current branch name and sets to to git card'
+        echo '     --branch    : checks out a new branch using the card number'
+        echo '     --story     : checks out a new branch using a story/ prefix'
+        echo '     --spike     : checks out a new branch using a spike/ prefix'
+        exit 0
+      ;;
+    --clear)
+      if [ -f $filepath ]
+        then
+            rm $filepath
+        fi
+        echo "Card number cleared"
+        exit 0
+      ;;
+    -c)
+        CURRENT_CARD=`git branch --show-current`
+        echo $CURRENT_CARD > $filepath
+        echo "Your current card: $CURRENT_CARD"
+        exit 0
+    ;;
+    --branch)
+        CURRENT_CARD=`cat $filepath`
+        git checkout -b ${CURRENT_CARD}
+        exit 0
+    ;;
+    --story)
+        CURRENT_CARD=`cat $filepath`
+        git checkout -b story/${CURRENT_CARD}
+        exit 0
+    ;;
+    --spike)
+        CURRENT_CARD=`cat $filepath`
+        git checkout -b spike/${CURRENT_CARD}
+        exit 0
+    ;;
+    -*|--*=) # unsupported flags
+      echo "${RED}Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+        CURRENT_CARD=$1
+        echo $CURRENT_CARD > $filepath
+        echo "Your current card: $CURRENT_CARD"
+        exit 0
+
+      ;;
+  esac
+done
+
+if [ ! -f $filepath ]
+then 
+    echo "You have not set a card"
+    exit 0
+fi
+
+CURRENT_CARD=`cat $filepath`
+if [ ${#CURRENT_CARD} -gt 0 ] 
+then
+    echo "Your current card: $CURRENT_CARD"
+else
+    echo "You have not set a card"
+fi
+exit 0

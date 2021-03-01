@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+
+# This hook is designed to REQUIRE the following commit message Pattern
+# "Card Number - Commit Message"
+# If using git card, the card number will be extracted from the git card number 
+# store
+
+COMMIT_MSG_FILE=$1
+COMMIT_MSG=$2
+SHA1=$3
+DIR=`dirname $COMMIT_MSG_FILE`
+CARD_NUMBER_FILE="${HOME}/.CARD_NUMBER"
+FINAL_COMMIT_MSG_FILE="$(pwd)/$COMMIT_MSG_FILE"
+CURRENT_CARD=""
+COMMIT_MSG="`cat ${COMMIT_MSG_FILE}`"
+RED='\033[0;31m'
+
+REGEX="[a-zA-Z0-9]+ - .*"
+
+# IF MESSAGE ALREADY CONFORMS, THE EXIT
+if [[ $COMMIT_MSG =~ $REGEX ]]; then
+	exit 0
+fi
+
+#READ CARD NUMBER IF AVAILABLE
+if [ -f $CARD_NUMBER_FILE ]
+then 
+    CURRENT_CARD=`cat ${CARD_NUMBER_FILE}`
+fi
+
+if [ ${#CURRENT_CARD} -gt 0 ]
+then
+	FINAL_COMMIT_MSG="${CURRENT_CARD} - ${COMMIT_MSG}"
+	echo $FINAL_COMMIT_MSG > $FINAL_COMMIT_MSG_FILE
+	exit 0
+fi
+
+if [[ $COMMIT_MSG =~ $REGEX ]]; then
+	exit 0
+fi
+
+echo "${RED}Error: Attempt to commit without a CARD NUMBER. Use Pattern #### - Text, or use git card"
+exit 1
