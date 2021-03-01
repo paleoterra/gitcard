@@ -5,23 +5,35 @@
 ## including: pre-commit hooks
 ##            tools to display the current card number
 
+function showhelp() {
+    echo 'git card { card number | -h | --clear | -c | --branch | --story | --spike }'
+    echo '     card number : text number of card (may include letters'
+    echo '     -h          : this help message'
+    echo '     --clear     : clears the current card number'
+    echo '     -c          : captures current branch name and sets to to git card'
+    echo '     --branch    : checks out a new branch using the card number'
+    echo '     --story     : checks out a new branch using a story/ prefix'
+    echo '     --spike     : checks out a new branch using a spike/ prefix'
+    echo 'Note: You must be in a git project'
+}
+
 ## Error red color
 RED='\033[0;31m'
 
 ## Store the card number in the user's home directory
-filepath="$HOME/.CARD_NUMBER"
+PROJECTPATH=`git rev-parse --show-toplevel`
+retval=$?
+if [ $retval -ne 0 ]; then
+    echo ' '
+    showhelp
+    exit 1
+fi
+filepath="$PROJECTPATH/.CARD_NUMBER"
 NEWCARD=""
 while (( "$#" )); do
   case "$1" in
     -h|--help)
-      echo 'git card { card number | -h | --clear | -c | --branch | --story | --spike }'
-        echo '     card number : text number of card (may include letters'
-        echo '     -h          : this help message'
-        echo '     --clear     : clears the current card number'
-        echo '     -c          : captures current branch name and sets to to git card'
-        echo '     --branch    : checks out a new branch using the card number'
-        echo '     --story     : checks out a new branch using a story/ prefix'
-        echo '     --spike     : checks out a new branch using a spike/ prefix'
+      showhelp
         exit 0
       ;;
     --clear)
