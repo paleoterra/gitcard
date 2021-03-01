@@ -5,7 +5,7 @@ Currently, two components are included in the project:
 git-card  - command line app
 prepare-commit-msg - git hook to inject git card number into commit messages
 
-Instalation
+Installation:
 
 set git-card to be executable
 install git-card into a bin directory
@@ -22,3 +22,9 @@ git commit "initial commit"
 
 the first commit will be 
 "1 - initial commit"
+
+*******
+update your gitingore file (preferably global gitignore) to exclude 
+".CARD_NUMBER"
+
+The above file tracks your current card and should not be included in a repo (unless you really want to)
