@@ -39,18 +39,11 @@ By editing Powerlevel10k's theme, you can display the current card.
 Start by installing Powerlevel10k if you haven't already
 https://github.com/romkatv/powerlevel10k
 
-Edit the .p10k.zsh in you home directory:
+Edit the .zshrc in you home directory:
 
-In the left prompt elements section, add a custom_gitcard line:
+Add the following lines:
 
-    typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-        os_icon                 # os identifier
-        custom_gitcard
-        dir                     # current directory
-        vcs                     # git status
-    )
-
-Somewhere below the above section, add the following function:
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(git_pair context GITCARD dir vcs)
 
     function cardcontent() {
     REPOPATH=$(git rev-parse --show-toplevel 2> /dev/null)
@@ -64,19 +57,14 @@ Somewhere below the above section, add the following function:
         echo "NO CARD"
     fi
     }
+    POWERLEVEL9K_CUSTOM_GITCARD=cardcontent
+    POWERLEVEL9K_CUSTOM_GITCARD_BACKGROUND=black
+    POWERLEVEL9K_CUSTOM_GITCARD_FOREGROUND=green
 
 The above function will read the .CARD_NUMBER file if present and display the card number.
 
 If you are not in a git project, it will set an empty string (and will not show the card on the command line)
 If you do not wish to show "NO CARD" if you are in a repo, but don't currently have a card, replace "NO CARD" with ""
 
-After the function, add the following:
-
-  typeset -g POWERLEVEL9K_CUSTOM_GITCARD=cardcontent
-  typeset -g POWERLEVEL9K_CUSTOM_GITCARD_BACKGROUND=black
-  typeset -g POWERLEVEL9K_CUSTOM_GITCARD_FOREGROUND=green
-
-the first line calls the function above.
-The other lines set the apperance of the card number on the command line: customize as needd.
 
 

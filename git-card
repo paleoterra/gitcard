@@ -11,9 +11,12 @@ function showhelp() {
     echo '     -h          : this help message'
     echo '     --clear     : clears the current card number'
     echo '     -c          : captures current branch name and sets to to git card'
-    echo '     --branch    : checks out a new branch using the card number'
-    echo '     --story     : checks out a new branch using a story/ prefix'
-    echo '     --spike     : checks out a new branch using a spike/ prefix'
+    echo '     --branch    : checks out an existing branch using the card number'
+    echo '     --story     : checks out an existing branch using a story/ prefix'
+    echo '     --spike     : checks out an existing branch using a spike/ prefix'
+    echo '     --new-branch    : checks out a new branch using the card number'
+    echo '     --new-story     : checks out a new branch using a story/ prefix'
+    echo '     --new-spike     : checks out a new branch using a spike/ prefix'
     echo 'Note: You must be in a git project'
 }
 
@@ -50,19 +53,34 @@ while (( "$#" )); do
         echo "Your current card: $CURRENT_CARD"
         exit 0
     ;;
-    --branch)
+    --new-branch)
         CURRENT_CARD=`cat $filepath`
         git checkout -b ${CURRENT_CARD}
         exit 0
     ;;
-    --story)
+    --new-story)
         CURRENT_CARD=`cat $filepath`
         git checkout -b story/${CURRENT_CARD}
         exit 0
     ;;
-    --spike)
+    --new-spike)
         CURRENT_CARD=`cat $filepath`
         git checkout -b spike/${CURRENT_CARD}
+        exit 0
+    ;;
+    --branch)
+        CURRENT_CARD=`cat $filepath`
+        git checkout ${CURRENT_CARD}
+        exit 0
+    ;;
+    --story)
+        CURRENT_CARD=`cat $filepath`
+        git checkout story/${CURRENT_CARD}
+        exit 0
+    ;;
+    --spike)
+        CURRENT_CARD=`cat $filepath`
+        git checkout spike/${CURRENT_CARD}
         exit 0
     ;;
     -*|--*=) # unsupported flags
