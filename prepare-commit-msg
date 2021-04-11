@@ -17,10 +17,11 @@ CURRENT_CARD=""
 COMMIT_MSG="`cat ${COMMIT_MSG_FILE}`"
 RED='\033[0;31m'
 
-REGEX="[a-zA-Z0-9]+ - .*"
+REGEX="^[a-zA-Z0-9]+ - .*"
 
 # IF MESSAGE ALREADY CONFORMS, THE EXIT
 if [[ $COMMIT_MSG =~ $REGEX ]]; then
+	echo "Commit message conforms: Did not insert card"
 	exit 0
 fi
 
@@ -34,10 +35,12 @@ if [ ${#CURRENT_CARD} -gt 0 ]
 then
 	FINAL_COMMIT_MSG="${CURRENT_CARD} - ${COMMIT_MSG}"
 	echo $FINAL_COMMIT_MSG > $FINAL_COMMIT_MSG_FILE
+	echo "Card number (${CURRENT_CARD}) added to commit message"
 	exit 0
 fi
 
 if [[ $COMMIT_MSG =~ $REGEX ]]; then
+	echo "Card number not added to commit message"
 	exit 0
 fi
 
