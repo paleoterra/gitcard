@@ -45,21 +45,18 @@ Add the following lines:
 
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(git_pair context GITCARD dir vcs)
 
-    function cardcontent() {
-    REPOPATH=$(git rev-parse --show-toplevel 2> /dev/null)
-    CARDPATH="${REPOPATH}/.CARD_NUMBER"
-    if [ -z "${REPOPATH}" ]; then
-        echo ""
-    elif [ -f ${CARDPATH} ]; then
-        CARDNUMBER=$(cat $CARDPATH)
-        echo $CARDNUMBER
-    else
-        echo "NO CARD"
-    fi
+    function prompt_GITCARD() {
+        REPOPATH=$(git rev-parse --show-toplevel 2> /dev/null)
+        CARDPATH="${REPOPATH}/.CARD_NUMBER"
+        if [ -z "${REPOPATH}" ]; then
+            p10k segment -t "" -f green -b black
+        elif [ -f ${CARDPATH} ]; then
+            CARDNUMBER=$(cat $CARDPATH)
+            p10k segment -t "${CARDNUMBER}" -f green -b black
+        else
+            p10k segment -t "NO CARD" -f green -b black
+        fi
     }
-    POWERLEVEL9K_CUSTOM_GITCARD=cardcontent
-    POWERLEVEL9K_CUSTOM_GITCARD_BACKGROUND=black
-    POWERLEVEL9K_CUSTOM_GITCARD_FOREGROUND=green
 
 The above function will read the .CARD_NUMBER file if present and display the card number.
 
