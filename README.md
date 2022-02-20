@@ -29,6 +29,13 @@ update your gitingore file (preferably global gitignore) to exclude
 
 The above file tracks your current card and should not be included in a repo (unless you really want to)
 
+Disabling:
+
+You can disable git card for specific projects while still using it for others.  To disable:
+git card --disable
+
+This will still create a file in your project, but the prepare-commit-msg will now no longer update the commit message or block a commit with the wrong format.
+
 
 # Install into Powerlevel10k
 

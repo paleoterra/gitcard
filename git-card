@@ -17,6 +17,7 @@ function showhelp() {
     echo '     --new-branch    : checks out a new branch using the card number'
     echo '     --new-story     : checks out a new branch using a story/ prefix'
     echo '     --new-spike     : checks out a new branch using a spike/ prefix'
+    echo '     --disable   : turns off commit message checking'
     echo 'Note: You must be in a git project'
 }
 
@@ -83,6 +84,12 @@ while (( "$#" )); do
         git checkout spike/${CURRENT_CARD}
         exit 0
     ;;
+    --disable)
+        CURRENT_CARD="DISABLED"
+        echo $CURRENT_CARD > $filepath
+        echo "You have disabled Git Card for this project.  To re-enable, set a card number."
+        exit 0
+      ;;
     -*|--*=) # unsupported flags
       echo "${RED}Error: Unsupported flag $1" >&2
       exit 1
