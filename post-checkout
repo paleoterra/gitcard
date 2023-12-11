@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+PROJECTDIR=$(git rev-parse --show-toplevel)
+CARD_NUMBER_FILE="${PROJECTDIR}/.CARD_NUMBER"
+NEW_BRANCH=`git reflog | awk 'NR==1{ print $8; exit }'`
+REGEX='([0-9]*)'
+
+if [ -f "${CARD_NUMBER_FILE}" ]
+then 
+    CURRENT_CARD=`cat "${CARD_NUMBER_FILE}"`
+
+	if [ $CURRENT_CARD == "DISABLED" ]; then
+	echo "Git Card is disabled for this project"
+	exit 0
+	fi
+fi
+
+[[ $NEW_BRANCH =~ $REGEX ]]
+
+if [ -z "${BASH_REMATCH[1]}" ]
+then
+	echo "Git Card Not Set"
+else
+	echo ${BASH_REMATCH[1]} > "$CARD_NUMBER_FILE"
+	echo "Git Card Updated to ${BASH_REMATCH[1]}"
+fi
